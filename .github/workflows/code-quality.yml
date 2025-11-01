@@ -2,13 +2,19 @@ name: Code Quality Check
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, feature/donald-revision-code ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 jobs:
   quality-check:
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Conventional Commits
+        uses: webiny/action-conventional-commits@v1.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
     
     steps:
     - name: Checkout code
