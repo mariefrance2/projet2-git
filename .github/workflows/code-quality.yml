@@ -2,10 +2,14 @@ name: Code Quality Check
 
 on:
   push:
-    branches: [ main, develop ]
+    branches:
+      - main
+      - principal
+      - develop
+      - 'feature/**' # Ceci est la ligne clé qui inclut toutes les branches feature/
+      - 'bugfix/**'
   pull_request:
-    branches: [ main, develop ]
-
+    types: [opened, synchronize, reopened]
 jobs:
   quality-check:
     runs-on: ubuntu-latest
