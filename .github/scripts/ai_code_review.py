@@ -1,15 +1,16 @@
-python
+
 #!/usr/bin/env python3
 """
 Script d'analyse IA du code avec profilage personnalisé.
+Utilise Groq API (gratuit).
 """
 
 import os
 import sys
 import json
 import subprocess
+import requests
 from typing import List, Dict, Any
-from openai import OpenAI
 
 
 def get_changed_files() -> List[str]:
@@ -24,7 +25,6 @@ def get_changed_files() -> List[str]:
         files = [f for f in result.stdout.strip().split('\n') if f.endswith('.py')]
         return files
     except subprocess.CalledProcessError:
-        # Si c'est le premier commit
         result = subprocess.run(
             ['git', 'ls-files', '*.py'],
             capture_output=True,
@@ -61,14 +61,13 @@ def read_file_content(filepath: str) -> str:
         return f"Erreur de lecture: {str(e)}"
 
 
-def analyze_code_with_ai(files: List[str], author_profile: Dict[str, Any]) -> Dict[str, Any]:
-    """Analyse le code avec l'IA OpenAI."""
-    api_key = os.getenv('OPENAI_API_KEY')
+def analyze_code_with_groq(files: List[str], author_profile: Dict[str, Any]) -> Dict[str, Any]:
+    """Analyse le code avec l'IA Groq."""
+    api_key = os.getenv('GROQ_API_KEY')
     if not api_key:
-        print("⚠️ OPENAI_API_KEY non trouvée, analyse IA ignorée.")
+        print("⚠️ GROQ_API_KEY non trouvée, analyse IA ignorée.")
         return {"analyses": []}
     
-    client = OpenAI(api_key=api_key)
     results = []
     
     personality = author_profile.get('personality', 'standard')
@@ -114,25 +113,36 @@ Réponds en JSON avec cette structure exacte:
 """
         
         try:
-            response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "Tu es un expert en revue de code Python."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.3
+            response = requests.post(
+                'https://api.groq.com/openai/v1/chat/completions',
+                headers={
+                    'Authorization': f'Bearer {api_key}',
+                    'Content-Type': 'application/json'
+                },
+                json={
+                    'model': 'llama-3.1-70b-versatile',
+                    'messages': [
+                        {'role': 'system', 'content': 'Tu es un expert en revue de code Python.'},
+                        {'role': 'user', 'content': prompt}
+                    ],
+                    'temperature': 0.3,
+                    'max_tokens': 2000
+                }
             )
             
-            content = response.choices[0].message.content
-            # Extraire le JSON de la réponse
-            if "```json" in content:
-                content = content.split("```json")[1].split("```")[0].strip()
-            elif "```" in content:
-                content = content.split("```")[1].split("```")[0].strip()
-            
-            analysis = json.loads(content)
-            analysis["file"] = filepath
-            results.append(analysis)
+            if response.status_code == 200:
+                content = response.json()['choices'][0]['message']['content']
+                
+                if "```json" in content:
+                    content = content.split("```json")[1].split("```")[0].strip()
+                elif "```" in content:
+                    content = content.split("```")[1].split("```")[0].strip()
+                
+                analysis = json.loads(content)
+                analysis["file"] = filepath
+                results.append(analysis)
+            else:
+                raise Exception(f"Erreur API: {response.status_code}")
             
         except Exception as e:
             results.append({
@@ -152,7 +162,7 @@ Réponds en JSON avec cette structure exacte:
 def generate_report(analysis_results: Dict[str, Any], author: str) -> str:
     """Génère un rapport détaillé."""
     report = f"""
-# Rapport d'Analyse IA du Code
+# Rapport d'Analyse IA du Code (Groq)
 
 **Auteur**: {author}
 **Date**: {subprocess.run(['date'], capture_output=True, text=True, shell=True).stdout.strip()}
@@ -206,9 +216,8 @@ def generate_report(analysis_results: Dict[str, Any], author: str) -> str:
 
 def main():
     """Fonction principale."""
-    print("Démarrage de l'analyse IA du code...")
+    print("Démarrage de l'analyse IA du code avec Groq...")
     
-    # Récupérer les fichiers modifiés
     changed_files = get_changed_files()
     if not changed_files or changed_files == ['']:
         print("Aucun fichier Python modifié.")
@@ -216,7 +225,6 @@ def main():
     
     print(f"Fichiers à analyser: {', '.join(changed_files)}")
     
-    # Charger les profils
     profiles = load_team_profiles()
     author = get_commit_author()
     author_profile = profiles.get(author, {})
@@ -225,19 +233,14 @@ def main():
     if author_profile:
         print(f"Profil: {author_profile.get('personality', 'standard')}")
     
-    # Analyser avec l'IA
-    results = analyze_code_with_ai(changed_files, author_profile)
-    
-    # Générer le rapport
+    results = analyze_code_with_groq(changed_files, author_profile)
     report = generate_report(results, author)
     
-    # Sauvegarder le rapport
     with open("ai-review-report.txt", "w", encoding="utf-8") as f:
         f.write(report)
     
     print("\n" + report)
     
-    # Vérifier s'il y a des problèmes critiques
     has_critical = any(
         analysis.get("critical_issues")
         for analysis in results.get("analyses", [])
@@ -252,7 +255,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-

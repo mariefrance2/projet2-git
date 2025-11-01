@@ -1,4 +1,3 @@
-`yaml
 name: Code Quality Check
 
 on:
@@ -52,7 +51,7 @@ jobs:
     
     - name: AI Code Review
       env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       run: |
         python .github/scripts/ai_code_review.py || echo "AI_REVIEW_FAILED=true" >> $GITHUB_ENV
       continue-on-error: true
@@ -74,7 +73,3 @@ jobs:
           ruff-report.json
           ai-review-report.txt
           mypy-report.txt
-```
-
----
-
