@@ -45,7 +45,7 @@ def get_commit_author() -> str:
 
 def load_team_profiles() -> Dict[str, Any]:
     """Charge les profils de l'équipe."""
-    profile_path = '.github/team_profiles.json'
+    profile_path = '.github/team_profil.json'
     if os.path.exists(profile_path):
         with open(profile_path, 'r', encoding='utf-8') as f:
             return json.load(f)
