@@ -2,14 +2,10 @@ name: Code Quality Check
 
 on:
   push:
-    branches:
-      - main
-      - principal
-      - develop
-      - 'feature/**' # Ceci est la ligne clé qui inclut toutes les branches feature/
-      - 'bugfix/**'
+    branches: [ main, feature/océanne ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ main ]
+
 jobs:
   quality-check:
     runs-on: ubuntu-latest
@@ -62,8 +58,8 @@ jobs:
     
     - name: Check results and send email
       env:
-        EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        EMAIL_USERNAME: ${{ secrets.EMAIL_OCEANNE }}
+        EMAIL_PASSWORD: ${{ secrets.PASSWORD_OCEANNE }}
         TEAM_EMAIL: ${{ secrets.TEAM_EMAIL }}
       run: |
         python .github/scripts/check_results.py
