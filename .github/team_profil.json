@@ -12,18 +12,18 @@
   },
   "foumaned9@gmail.com": {
     "name": "Donald",
-    "personality": "direct",
+    "personality": "encouraging",
     "experience_level": "intermédiaire",
     "preferences": {
-      "detail_level": "moyen",
+      "detail_level": "élévé",
       "examples": false,
       "tone": "professionnel"
     }
   },
-  "membre3@example.com": {
+  "oceannemessina716@gmail.com": {
     "name": "océanne",
-    "personality": "sociable",
-    "experience_level": "débutant",
+    "personality": "friendly",
+    "experience_level": "junior",
     "preferences": {
       "detail_level": "faible",
       "examples": false,
@@ -50,10 +50,10 @@
       "tone": "travailleur"
     }
   },
-   "membre6@example.com": {
+   "gibertntolo@gmail.com": {
     "name": "Sylvain",
-    "personality": "drole",
-    "experience_level": "debutant",
+    "personality": "direct",  
+    "experience_level": "junior",
     "preferences": {
       "detail_level": "moyen",
       "examples": false,
