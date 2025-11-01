@@ -5,8 +5,7 @@ on:
 
     branches: [ main, feature/océanne ]
 
-    branches: [ main, feature/donald-revision-code ]
-
+  
   pull_request:
     branches: [ main ]
 
