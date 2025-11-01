@@ -3,20 +3,46 @@ Page Vue d'Ensemble du Budget - Afficher l'état général du budget
 """
 from taipy.gui import Markdown
 from typing import List, Dict, Any
+from datetime import datetime
 import pandas as pd
 from utils.data_manager import DataManager
 
 data_manager = DataManager()
 
-def calculate_budget_summary(state) -> Dict[str, float]:
-    """Calculer le résumé du budget à partir des données réelles"""
-    # Charger les revenus
-    income_data = data_manager.load_data("income") or []
-    total_income = sum(item.get("amount", 0) for item in income_data)
+# --- LOGIQUE DE FILTRAGE PAR MOIS ---
+
+def filter_records_by_current_month(records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Filtre les enregistrements pour le mois et l'année en cours."""
+    if not records:
+        return []
+        
+    now = datetime.now()
+    current_month_year = now.strftime("%Y-%m")
     
-    # Charger les dépenses
+    filtered_records = []
+    for record in records:
+        try:
+            record_date = datetime.strptime(record["date"], "%Y-%m-%d")
+            if record_date.strftime("%Y-%m") == current_month_year:
+                filtered_records.append(record)
+        except (KeyError, ValueError):
+            continue
+            
+    return filtered_records
+
+# --- FONCTIONS DE CALCUL MISES À JOUR (AVEC FILTRE) ---
+
+def calculate_budget_summary(state) -> Dict[str, float]:
+    """Calculer le résumé du budget à partir des données réelles du mois en cours"""
+    # Charger et filtrer les revenus
+    income_data = data_manager.load_data("income") or []
+    monthly_income_data = filter_records_by_current_month(income_data)
+    total_income = sum(item.get("amount", 0) for item in monthly_income_data)
+    
+    # Charger et filtrer les dépenses
     expenses_data = data_manager.load_data("expenses") or []
-    total_expenses = sum(item.get("amount", 0) for item in expenses_data)
+    monthly_expenses_data = filter_records_by_current_month(expenses_data)
+    total_expenses = sum(item.get("amount", 0) for item in monthly_expenses_data)
     
     # Calculer le restant et le taux d'épargne
     remaining = total_income - total_expenses
@@ -30,12 +56,13 @@ def calculate_budget_summary(state) -> Dict[str, float]:
     }
 
 def calculate_category_expenses(state) -> Dict[str, List[Any]]:
-    """Calculer les dépenses par catégorie"""
+    """Calculer les dépenses par catégorie pour le mois en cours"""
     expenses_data = data_manager.load_data("expenses") or []
+    monthly_expenses_data = filter_records_by_current_month(expenses_data)
     
     # Grouper par catégorie
     category_totals: Dict[str, float] = {}
-    for expense in expenses_data:
+    for expense in monthly_expenses_data:
         category = expense.get("category", "Autre")
         amount = expense.get("amount", 0)
         category_totals[category] = category_totals.get(category, 0) + amount
@@ -50,6 +77,8 @@ def calculate_category_expenses(state) -> Dict[str, List[Any]]:
         "Catégorie": list(category_totals.keys()),
         "Montant": list(category_totals.values())
     }
+
+# --- VARIABLES ET INITIALISATION ---
 
 budget_data: Dict[str, float] = {
     "total_income": 0.0,
@@ -67,6 +96,7 @@ budget_categories: List[Dict[str, Any]] = []
 new_category_name: str = ""
 new_category_limit: float = 0.0
 selected_category_index: int = -1
+currency_symbol: str = "€" # Symbole par défaut
 
 def load_budget_categories(state) -> None:
     """Charger les catégories de budget"""
@@ -105,15 +135,16 @@ def delete_category(state, index: int) -> None:
 
 def update_page_data(state) -> None:
     """Mettre à jour toutes les données de la page"""
-    state.budget_data = calculate_budget_summary(state)
+    state.budget_data = calculate_budget_summary(state) 
     state.category_chart_data = calculate_category_expenses(state)
     
-    # Mettre à jour les dépenses réelles pour chaque catégorie
     expenses_data = data_manager.load_data("expenses") or []
+    monthly_expenses_data = filter_records_by_current_month(expenses_data)
+    
     for category in state.budget_categories:
         spent = sum(
             expense.get("amount", 0) 
-            for expense in expenses_data 
+            for expense in monthly_expenses_data
             if expense.get("category") == category["name"]
         )
         category["spent"] = spent
@@ -122,12 +153,13 @@ def update_page_data(state) -> None:
     settings = data_manager.load_data("settings") or {}
     state.currency_symbol = settings.get("currency", "€")
 
-currency_symbol: str = "€"
 
 def on_init(state) -> None:
     """Initialiser la page avec les données"""
     load_budget_categories(state)
     update_page_data(state)
+
+# --- TAIPY MARKDOWN (CORRIGÉ) ---
 
 page = Markdown("""
 <|container|
@@ -147,22 +179,22 @@ page = Markdown("""
 <|layout|columns=1 1 1 1|gap=1rem|
 <|card|
 ### Revenu Total
-<|text|class_name=amount-text|**{budget_data['total_income']:.2f} {currency_symbol}**|>
+<|{budget_data['total_income']}|text|format=%.2f {currency_symbol}|class_name=amount-text|>
 |>
 
 <|card|
 ### Dépenses Totales
-<|text|class_name=amount-text|**{budget_data['total_expenses']:.2f} {currency_symbol}**|>
+<|{budget_data['total_expenses']}|text|format=%.2f {currency_symbol}|class_name=amount-text|>
 |>
 
 <|card|
 ### Restant
-<|text|class_name=amount-text positive|**{budget_data['remaining']:.2f} {currency_symbol}**|>
+<|{budget_data['remaining']}|text|format=%.2f {currency_symbol}|class_name=amount-text positive|>
 |>
 
 <|card|
 ### Taux d'Épargne
-<|text|class_name=amount-text|**{budget_data['savings_rate']:.1f}%**|>
+<|{budget_data['savings_rate']}|text|format=%.1f %%|class_name=amount-text|>
 |>
 |>
 
@@ -182,12 +214,7 @@ page = Markdown("""
 
 ### Mes Catégories
 
-<|{budget_categories}|table|
-columns=name;limit;spent
-column[name].label=Catégorie
-column[limit].label=Limite ({currency_symbol})
-column[spent].label=Dépensé ({currency_symbol})
-|>
+<|{budget_categories}|table|columns=name;limit;spent|column[name].label=Catégorie|column[limit].label=Limite ({currency_symbol})|column[spent].label=Dépensé ({currency_symbol})|>
 
 <|button|label=🔄 Actualiser|on_action=update_page_data|class_name=refresh-button|>
 
