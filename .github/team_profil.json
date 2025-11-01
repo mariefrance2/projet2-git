@@ -1,0 +1,63 @@
+
+{
+  "marieyep8@gmail.com": {
+    "name": "marie-france",
+    "personality": "encourageant",
+    "experience_level": "intermediaire",
+    "preferences": {
+      "detail_level": "élevé",
+      "examples": true,
+      "tone": "amical"
+    }
+  },
+  "foumaned9@gmail.com": {
+    "name": "Donald",
+    "personality": "direct",
+    "experience_level": "intermédiaire",
+    "preferences": {
+      "detail_level": "moyen",
+      "examples": false,
+      "tone": "professionnel"
+    }
+  },
+  "membre3@example.com": {
+    "name": "océanne",
+    "personality": "sociable",
+    "experience_level": "débutant",
+    "preferences": {
+      "detail_level": "faible",
+      "examples": false,
+      "tone": "technique"
+    }
+  },
+   "roseorange76@gmail.com": {
+    "name": "Rose",
+    "personality": "joyeuse",
+    "experience_level": "intermédiaire",
+    "preferences": {
+      "detail_level": "moyen",
+      "examples": false,
+      "tone": "professionnel"
+    }
+  },
+   "ldardaorigobert78@gmail.com": {
+    "name": "Dadao",
+    "personality": "pertinent",
+    "experience_level": "intermédiaire",
+    "preferences": {
+      "detail_level": "moyen",
+      "examples": false,
+      "tone": "travailleur"
+    }
+  },
+   "membre6@example.com": {
+    "name": "Sylvain",
+    "personality": "drole",
+    "experience_level": "debutant",
+    "preferences": {
+      "detail_level": "moyen",
+      "examples": false,
+      "tone": "professionnel"
+    }
+  }
+}

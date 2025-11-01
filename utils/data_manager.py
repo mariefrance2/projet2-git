@@ -1,0 +1,52 @@
+"""
+Data management utilities for budget data
+"""
+from typing import List, Dict, Any, Optional, Union
+from datetime import datetime
+import json
+from pathlib import Path
+
+class DataManager:
+    """Manage budget data persistence"""
+    
+    def __init__(self, data_dir: str = "data") -> None:
+        self.data_dir = Path(data_dir)
+        self.data_dir.mkdir(exist_ok=True)
+    
+    def save_data(self, filename: str, data: Union[List[Dict[str, Any]], Dict[str, Any]]) -> bool:
+        """Save data to JSON file"""
+        try:
+            filepath = self.data_dir / f"{filename}.json"
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, default=str, ensure_ascii=False)
+            print(f"[v0] Data saved successfully to {filepath}")
+            return True
+        except Exception as e:
+            print(f"[v0] Error saving data: {e}")
+            return False
+    
+    def load_data(self, filename: str) -> Optional[Union[List[Dict[str, Any]], Dict[str, Any]]]:
+        """Load data from JSON file"""
+        try:
+            filepath = self.data_dir / f"{filename}.json"
+            if filepath.exists():
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                print(f"[v0] Data loaded successfully from {filepath}")
+                return data
+            else:
+                print(f"[v0] No saved data found at {filepath}")
+            return None
+        except Exception as e:
+            print(f"[v0] Error loading data: {e}")
+            return None
+    
+    def export_all_data(self) -> Dict[str, Any]:
+        """Export all budget data"""
+        return {
+            "income": self.load_data("income") or [],
+            "expenses": self.load_data("expenses") or [],
+            "savings_goals": self.load_data("savings_goals") or [],
+            "settings": self.load_data("settings") or {},
+            "export_date": datetime.now().isoformat()
+        }
