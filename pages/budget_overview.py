@@ -10,6 +10,7 @@ from utils.data_manager import DataManager
 
 data_manager = DataManager()
 
+
 # --- LOGIQUE DE FILTRAGE PAR MOIS (MODIFIÉE) ---
 
 def filter_records_by_current_month(records: List[Dict[str, Any]], selected_month: str) -> List[Dict[str, Any]]:
@@ -45,6 +46,21 @@ def calculate_budget_summary(state, selected_month: str) -> Dict[str, float]:
     # Passe le mois sélectionné au filtre
     monthly_expenses_data = filter_records_by_current_month(expenses_data, selected_month)
     total_expenses = sum(item.get("amount", 0) for item in monthly_expenses_data)
+
+def calculate_budget_summary(state) -> Dict[str, float]:
+    """Calculer le résumé du budget à partir des données réelles"""
+    # Charger les revenus
+    income_data = data_manager.load_data("income")
+    if not isinstance(income_data, list):
+        income_data = []
+    total_income = sum(item.get("amount", 0) for item in income_data)
+    
+    # Charger les dépenses
+    expenses_data = data_manager.load_data("expenses")
+    if not isinstance(expenses_data, list):
+        expenses_data = []
+    total_expenses = sum(item.get("amount", 0) for item in expenses_data)
+
     
     # Calculer le restant et le taux d'épargne
     remaining = total_income - total_expenses
@@ -57,12 +73,21 @@ def calculate_budget_summary(state, selected_month: str) -> Dict[str, float]:
         "savings_rate": savings_rate
     }
 
+
 def calculate_category_expenses(state, selected_month: str) -> Dict[str, List[Any]]:
     """Calculer les dépenses par catégorie pour le mois sélectionné"""
     expenses_data = data_manager.load_data("expenses") or []
     # Passe le mois sélectionné au filtre
     monthly_expenses_data = filter_records_by_current_month(expenses_data, selected_month)
     
+
+def calculate_category_expenses(state) -> Dict[str, List[Any]]:
+    """Calculer les dépenses par catégorie"""
+    raw_data = data_manager.load_data("expenses")
+    expenses_data: List[Dict[str, Any]] = (
+        raw_data if isinstance(raw_data, list) and all(isinstance(x, dict) for x in raw_data) else []
+    )
+
     # Grouper par catégorie
     category_totals: Dict[str, float] = {}
     for expense in monthly_expenses_data:
@@ -157,6 +182,7 @@ def delete_category(state, index: int) -> None:
 def update_page_data(state) -> None:
     """Mettre à jour toutes les données de la page"""
     
+
     # 1. Récupère le mois sélectionné
     selected_month = state.selected_month_year
 
@@ -172,6 +198,14 @@ def update_page_data(state) -> None:
     # Filtre les dépenses selon le mois sélectionné
     monthly_expenses_data = filter_records_by_current_month(expenses_data, selected_month)
     
+
+    # Mettre à jour les dépenses réelles pour chaque catégorie
+    raw_expenses = data_manager.load_data("expenses")
+    expenses_data: List[Dict[str, Any]] = (
+        raw_expenses if isinstance(raw_expenses, list) and all(isinstance(x, dict) for x in raw_expenses) else []
+    )
+
+
     for category in state.budget_categories:
         spent = sum(
             expense.get("amount", 0) 
@@ -180,8 +214,13 @@ def update_page_data(state) -> None:
         )
         category["spent"] = spent
     
+
     # 5. Obtenir le symbole de devise
     settings = data_manager.load_data("settings") or {}
+
+    # Obtenir le symbole de devise
+    settings = data_manager.load_data("settings")[0] if data_manager.load_data("settings") else {}
+
     state.currency_symbol = settings.get("currency", "€")
 
 
