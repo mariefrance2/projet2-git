@@ -63,8 +63,8 @@ jobs:
       
       - name: Check results and send email
         env:
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_DONALD }}
+          EMAIL_PASSWORD: ${{ secrets.PASSWORD_DONALD }}
           TEAM_EMAIL: ${{ secrets.TEAM_EMAIL }}
         run: |
           python .github/scripts/check_results.py
