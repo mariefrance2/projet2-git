@@ -20,7 +20,7 @@
       "tone": "professionnel"
     }
   },
-  "membre3@example.com": {
+  "oceannemessina716@gmail.com": {
     "name": "océanne",
     "personality": "sociable",
     "experience_level": "débutant",
@@ -48,16 +48,6 @@
       "detail_level": "moyen",
       "examples": false,
       "tone": "travailleur"
-    }
-  },
-   "membre6@example.com": {
-    "name": "Sylvain",
-    "personality": "drole",
-    "experience_level": "debutant",
-    "preferences": {
-      "detail_level": "moyen",
-      "examples": false,
-      "tone": "professionnel"
     }
   }
 }
