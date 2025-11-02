@@ -4,7 +4,7 @@ Page Paramètres - Configurer les préférences de l'application
 from taipy.gui import Markdown, notify
 from typing import List
 
-currency: str = "EUR"
+currency: str = "FCFA"
 currencies: List[str] = ["EUR", "USD", "GBP", "CAD", "CHF", "FCFA"]
 theme: str = "Clair"
 themes: List[str] = ["Clair", "Sombre"]

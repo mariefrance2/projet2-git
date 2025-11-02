@@ -71,7 +71,7 @@ page = Markdown("""
 <|{income_df}|table|>
 
 ## Revenu Total Ce Mois
-### {sum(record['amount'] for record in income_records):.2f}
+## {sum(record['amount'] for record in income_records):.2f}
 
 |>
 

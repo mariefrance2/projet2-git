@@ -29,9 +29,7 @@ Créez et suivez vos objectifs d'épargne
 |>
 |>
 
-<|{None}|button|label=Accéder au Tableau de Bord|on_action=navigate_to_dashboard|class_name=primary-button|>
 
-|>
 
 <style>
 .primary-button {

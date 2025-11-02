@@ -144,8 +144,8 @@ page = Markdown("""
 
 ## Résumé Financier
 
-<|layout|columns=1 1 1 1|gap=1rem|
-<|card|
+<|layout|columns=1 1 1 1|gap=1rem|>
+<|card|>
 ### Revenu Total
 <|text|class_name=amount-text|**{budget_data['total_income']:.2f} {currency_symbol}**|>
 |>
