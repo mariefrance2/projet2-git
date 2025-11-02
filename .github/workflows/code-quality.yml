@@ -2,11 +2,7 @@ name: Code Quality Check
 
 on:
   push:
-<<<<<<< HEAD
     branches: [ main, feature/marie-france ]
-=======
-    branches: [ main, feature/donald-revision-code ]
->>>>>>> origin/main
   pull_request:
     branches: [ main ]
 
@@ -15,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-<<<<<<< HEAD
     - name: Checkout Conventional Commits
       uses: webiny/action-conventional-commits@v1.3.0
       with:
@@ -83,72 +78,3 @@ jobs:
           ruff-report.json
           ai-review-report.txt
           mypy-report.txt
-=======
-      - name: Check Conventional Commits
-        uses: webiny/action-conventional-commits@v1.3.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-    
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      
-      - name: Run type checking with mypy
-        run: |
-          mypy . --ignore-missing-imports --no-strict-optional || echo "MYPY_FAILED=true" >> $GITHUB_ENV
-        continue-on-error: true
-      
-      # - name: Run linting with ruff
-      #   run: |
-      #     ruff check . --output-format=json > ruff-report.json || echo "RUFF_FAILED=true" >> $GITHUB_ENV
-      #   continue-on-error: true
-      
-      - name: Run tests with pytest
-        run: |
-          pytest tests/ -v --tb=short || echo "PYTEST_FAILED=true" >> $GITHUB_ENV
-        continue-on-error: true
-      
-      - name: AI Code Review
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: |
-          python .github/scripts/ai_code_review.py || echo "AI_REVIEW_FAILED=true" >> $GITHUB_ENV
-        continue-on-error: true
-      
-      - name: Check results and send email
-        env:
-          EMAIL_USERNAME: ${{ secrets.EMAIL_DONALD }}
-          EMAIL_PASSWORD: ${{ secrets.PASSWORD_DONALD }}
-          TEAM_EMAIL: ${{ secrets.TEAM_EMAIL }}
-        run: |
-          python .github/scripts/check_results.py
-      
-      - name: Upload reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: quality-reports
-          path: |
-            ruff-report.json
-            ai-review-report.txt
-            mypy-report.txt
->>>>>>> origin/main
