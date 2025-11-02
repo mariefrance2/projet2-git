@@ -1,4 +1,4 @@
-python
+
 """
 Tests de base pour l'application de budget.
 """
