@@ -29,14 +29,21 @@ class DataManager:
         """Load data from JSON file"""
         try:
             filepath = self.data_dir / f"{filename}.json"
-            if filepath.exists():
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                print(f"[v0] Data loaded successfully from {filepath}")
+            if not filepath.exists():
+                print(f"[v0] No saved data found at {filepath}")
+                return None
+
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            # ✅ Vérification du type du JSON avant de le retourner
+            if isinstance(data, dict):
+                return data
+            elif isinstance(data, list):
                 return data
             else:
-                print(f"[v0] No saved data found at {filepath}")
-            return None
+                print(f"[v0] Unexpected data format in {filepath}: {type(data)}")
+                return None
         except Exception as e:
             print(f"[v0] Error loading data: {e}")
             return None

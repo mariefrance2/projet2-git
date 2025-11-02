@@ -11,11 +11,15 @@ data_manager = DataManager()
 def calculate_budget_summary(state) -> Dict[str, float]:
     """Calculer le résumé du budget à partir des données réelles"""
     # Charger les revenus
-    income_data = data_manager.load_data("income") or []
+    income_data = data_manager.load_data("income")
+    if not isinstance(income_data, list):
+        income_data = []
     total_income = sum(item.get("amount", 0) for item in income_data)
     
     # Charger les dépenses
-    expenses_data = data_manager.load_data("expenses") or []
+    expenses_data = data_manager.load_data("expenses")
+    if not isinstance(expenses_data, list):
+        expenses_data = []
     total_expenses = sum(item.get("amount", 0) for item in expenses_data)
     
     # Calculer le restant et le taux d'épargne
@@ -31,8 +35,11 @@ def calculate_budget_summary(state) -> Dict[str, float]:
 
 def calculate_category_expenses(state) -> Dict[str, List[Any]]:
     """Calculer les dépenses par catégorie"""
-    expenses_data = data_manager.load_data("expenses") or []
-    
+    raw_data = data_manager.load_data("expenses")
+    expenses_data: List[Dict[str, Any]] = (
+        raw_data if isinstance(raw_data, list) and all(isinstance(x, dict) for x in raw_data) else []
+    )
+
     # Grouper par catégorie
     category_totals: Dict[str, float] = {}
     for expense in expenses_data:
@@ -109,7 +116,11 @@ def update_page_data(state) -> None:
     state.category_chart_data = calculate_category_expenses(state)
     
     # Mettre à jour les dépenses réelles pour chaque catégorie
-    expenses_data = data_manager.load_data("expenses") or []
+    raw_expenses = data_manager.load_data("expenses")
+    expenses_data: List[Dict[str, Any]] = (
+        raw_expenses if isinstance(raw_expenses, list) and all(isinstance(x, dict) for x in raw_expenses) else []
+    )
+    
     for category in state.budget_categories:
         spent = sum(
             expense.get("amount", 0) 
@@ -119,7 +130,9 @@ def update_page_data(state) -> None:
         category["spent"] = spent
     
     # Obtenir le symbole de devise
-    settings = data_manager.load_data("settings") or {}
+    settings = data_manager.load_data("settings")
+    if not isinstance(settings, dict):
+        settings = {}
     state.currency_symbol = settings.get("currency", "€")
 
 currency_symbol: str = "€"
