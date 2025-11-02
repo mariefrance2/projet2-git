@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/main
 #!/usr/bin/env python3
 """
 Vérifie les résultats des tests et envoie un email si erreurs.
