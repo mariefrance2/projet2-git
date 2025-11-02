@@ -1,3 +1,4 @@
+
 """
 Page Vue d'Ensemble du Budget - Afficher l'état général du budget
 """
