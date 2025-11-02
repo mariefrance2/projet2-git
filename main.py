@@ -17,7 +17,7 @@ def load_initial_data():
     saved_income = data_manager.load_data("income")
     saved_expenses = data_manager.load_data("expenses")
     saved_goals = data_manager.load_data("savings_goals")
-    saved_settings = data_manager.load_data("settings")
+    saved_settings = data_manager.load_data("settings")[0] if data_manager.load_data("settings") else {}
     
     if saved_income:
         income.income_records = saved_income
