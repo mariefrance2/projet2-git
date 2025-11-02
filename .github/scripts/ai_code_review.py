@@ -88,6 +88,11 @@ Tu es un expert en revue de code Python. Analyse ce code et fournis un feedback 
 - Personnalité: {personality}
 - Préférences: {json.dumps(preferences, ensure_ascii=False)}
 
+**Consignes spéciales :**
+- Si la personnalité est "joyeuse, encourageant, sociable", sois bienveillant, utilise un ton encourageant et un peu d’humour léger.
+- Si la personnalité est "directe", sois concis, précis et sans détour.
+- Si la personnalité est "pertinent", explique les erreurs calmement et donne des conseils d’amélioration clairs.
+
 **Code à analyser ({filepath}):**
 ```python
 {code}
@@ -100,6 +105,7 @@ Tu es un expert en revue de code Python. Analyse ce code et fournis un feedback 
 4. Vérifie le typage Python (type hints)
 5. Suggère des optimisations de performance
 6. Propose des améliorations de style
+7. Ajoute un résumé de 2-3 phrases au ton cohérent avec la personnalité
 
 Réponds en JSON avec cette structure exacte:
 {{
@@ -108,7 +114,7 @@ Réponds en JSON avec cette structure exacte:
     "type_issues": ["problèmes de typage"],
     "performance_tips": ["conseils de performance"],
     "style_suggestions": ["suggestions de style"],
-    "summary": "Résumé personnalisé en 2-3 phrases"
+    "summary": "Résumé personnalisé "
 }}
 """
         

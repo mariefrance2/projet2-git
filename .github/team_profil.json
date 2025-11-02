@@ -49,6 +49,7 @@
       "examples": false,
       "tone": "travailleur"
     }
+<<<<<<< HEAD
   },
    "gibertntolo@gmail.com": {
     "name": "Sylvain",
@@ -59,5 +60,7 @@
       "examples": false,
       "tone": "professionnel"
     }
+=======
+>>>>>>> b88fd2a (feat: personnalisation du rapport ia)
   }
 }
