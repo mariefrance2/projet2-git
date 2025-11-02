@@ -25,28 +25,28 @@ class DataManager:
             print(f"[v0] Error saving data: {e}")
             return False
     
-    def load_data(self, filename: str) -> Optional[Union[List[Dict[str, Any]], Dict[str, Any]]]:
+    def load_data(self, filename: str) -> List[Dict[str, Any]]:
         """Load data from JSON file"""
         try:
             filepath = self.data_dir / f"{filename}.json"
             if not filepath.exists():
                 print(f"[v0] No saved data found at {filepath}")
-                return None
+                return []
 
             with open(filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             # ✅ Vérification du type du JSON avant de le retourner
             if isinstance(data, dict):
-                return data
+                return [data]
             elif isinstance(data, list):
-                return data
+                return [item for item in data if isinstance(item, dict)]
             else:
                 print(f"[v0] Unexpected data format in {filepath}: {type(data)}")
-                return None
+                return []
         except Exception as e:
             print(f"[v0] Error loading data: {e}")
-            return None
+            return []
     
     def export_all_data(self) -> Dict[str, Any]:
         """Export all budget data"""

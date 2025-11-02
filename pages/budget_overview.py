@@ -120,7 +120,7 @@ def update_page_data(state) -> None:
     expenses_data: List[Dict[str, Any]] = (
         raw_expenses if isinstance(raw_expenses, list) and all(isinstance(x, dict) for x in raw_expenses) else []
     )
-    
+
     for category in state.budget_categories:
         spent = sum(
             expense.get("amount", 0) 
@@ -130,9 +130,7 @@ def update_page_data(state) -> None:
         category["spent"] = spent
     
     # Obtenir le symbole de devise
-    settings = data_manager.load_data("settings")
-    if not isinstance(settings, dict):
-        settings = {}
+    settings = data_manager.load_data("settings")[0] if data_manager.load_data("settings") else {}
     state.currency_symbol = settings.get("currency", "€")
 
 currency_symbol: str = "€"
