@@ -15,7 +15,7 @@ from datetime import datetime
 
 def check_env_vars() -> bool:
     """Vérifie que les variables d'environnement sont présentes."""
-    required = ['EMAIL_ROSE', 'PASSWORD_ROSE', 'TEAM_EMAIL']
+    required = ['EMAIL_USERNAME', 'EMAIL_PASSWORD', 'TEAM_EMAIL']
     missing = [var for var in required if not os.getenv(var)]
     
     if missing:
@@ -160,8 +160,8 @@ def send_email(subject: str, body: str) -> bool:
         print("Impossible d'envoyer l'email: variables manquantes")
         return False
     
-    sender = os.getenv('EMAIL_ROSE')
-    password = os.getenv('PASSWORD_ROSE')
+    sender = os.getenv('EMAIL_USERNAME')
+    password = os.getenv('EMAIL_PASSWORD')
     recipient = os.getenv('TEAM_EMAIL')
     
     msg = MIMEMultipart('alternative')
