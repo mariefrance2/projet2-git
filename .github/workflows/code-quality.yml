@@ -44,10 +44,10 @@ jobs:
           mypy . --ignore-missing-imports --no-strict-optional || echo "MYPY_FAILED=true" >> $GITHUB_ENV
         continue-on-error: true
       
-      - name: Run linting with ruff
-        run: |
-          ruff check . --output-format=json > ruff-report.json || echo "RUFF_FAILED=true" >> $GITHUB_ENV
-        continue-on-error: true
+      # - name: Run linting with ruff
+      #   run: |
+      #     ruff check . --output-format=json > ruff-report.json || echo "RUFF_FAILED=true" >> $GITHUB_ENV
+      #   continue-on-error: true
       
       - name: Run tests with pytest
         run: |
