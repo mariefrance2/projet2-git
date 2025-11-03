@@ -126,7 +126,7 @@ Réponds en JSON avec cette structure exacte:
                     'Content-Type': 'application/json'
                 },
                 json={
-                    'model': 'llama-3.1-70b-versatile',
+                    'model': 'llama-3.3-70b-versatile',
                     'messages': [
                         {'role': 'system', 'content': 'Tu es un expert en revue de code Python.'},
                         {'role': 'user', 'content': prompt}
