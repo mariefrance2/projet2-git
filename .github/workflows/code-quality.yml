@@ -54,28 +54,6 @@ jobs:
           pytest tests/ -v --tb=short || echo "PYTEST_FAILED=true" >> $GITHUB_ENV
         continue-on-error: true
       
-      - name: Debug API key
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: |
-          if [ -z "$GROQ_API_KEY" ]; then
-            echo "❌ GROQ_API_KEY is empty"
-          else
-            echo "✅ GROQ_API_KEY is set"
-            echo "${GROQ_API_KEY:0:5}..."  # print only the first few chars
-          fi
-      
-      - name: Debug API Email
-        env:
-          EMAIL_USERNAME: ${{ secrets.EMAIL_DONALD }}
-        run: |
-          if [ -z "$EMAIL_USERNAME" ]; then
-            echo "❌ EMAIL_USERNAME is empty"
-          else
-            echo "✅ EMAIL_USERNAME is set"
-            echo "${EMAIL_USERNAME:0:5}..."  # print only the first few chars
-          fi
-
       - name: AI Code Review
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
