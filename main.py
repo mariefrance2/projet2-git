@@ -5,7 +5,8 @@ Point d'entrée principal pour l'application Taipy
 from typing import Optional
 import taipy as tp
 from taipy.gui import Gui, navigate, State
-from pages import home, dashboard, budget_overview, income, expenses, savings, reports, settings
+# AJOUTER 'table' ICI
+from pages import home, dashboard, budget_overview, income, expenses, savings, reports, settings, table 
 from utils.state_manager import AppState
 from utils.data_manager import DataManager
 
@@ -43,6 +44,7 @@ pages = {
     "savings": savings.page,
     "reports": reports.page,
     "settings": settings.page,
+    "transactions": table.page, # <-- NOUVELLE PAGE
 }
 
 def on_navigate(state: State, page_name: str) -> None:

@@ -51,7 +51,7 @@ Consultez les rapports financiers
 |>
 
 <|card|
-### ⚙️ Paramètres
+### ⚙️ Paramètres de
 Configurez vos préférences
 <|{None}|button|label=Paramètres|on_action=go_to_settings|class_name=card-button|>
 |>
