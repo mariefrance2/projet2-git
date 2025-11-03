@@ -70,9 +70,9 @@ def analyze_code_with_groq(files: List[str], author_profile: Dict[str, Any]) -> 
     
     results = []
     
-    personality = author_profile.get('personality', 'standard')
-    experience = author_profile.get('experience_level', 'intermediate')
-    preferences = author_profile.get('preferences', {})
+    personality = author_profile.get('personality')
+    experience = author_profile.get('experience_level')
+    preferences = author_profile.get('preferences')
     
     for filepath in files:
         if not os.path.exists(filepath):

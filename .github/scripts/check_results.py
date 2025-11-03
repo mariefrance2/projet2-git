@@ -61,6 +61,22 @@ def generate_email_body(failures: dict, ai_report: str) -> str:
             <li>✅ Analyse IA</li>
         </ul>
         <p><strong>Date:</strong> """ + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + """</p>
+
+        </div>
+            
+            <h3>Rapport d'Analyse IA:</h3>
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; white-space: pre-wrap; font-family: monospace; font-size: 12px;">
+                """ + ai_report + """
+            </div>
+            
+            <p><strong>Date:</strong> """ + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + """</p>
+            
+            <hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;">
+            <p style="font-size: 12px; color: #6c757d;">
+                Ce message a été généré automatiquement par GitHub Actions.<br>
+                Pour plus d'informations, consultez les logs de l'action sur GitHub.
+            </p>
+        </div>
     </div>
 </body>
 </html>
