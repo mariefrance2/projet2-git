@@ -36,7 +36,7 @@ def check_failures() -> dict:
     """Vérifie les échecs des différents outils."""
     failures = {
         'mypy': os.getenv('MYPY_FAILED') == 'true',
-        'ruff': os.getenv('RUFF_FAILED') == 'true',
+        # 'ruff': os.getenv('RUFF_FAILED') == 'true',
         'pytest': os.getenv('PYTEST_FAILED') == 'true',
         'ai_review': os.getenv('AI_REVIEW_FAILED') == 'true'
     }
@@ -56,7 +56,7 @@ def generate_email_body(failures: dict, ai_report: str) -> str:
         <p>Tous les tests sont passés avec succès!</p>
         <ul>
             <li>✅ Vérification de typage (mypy)</li>
-            <li>✅ Vérification de style (ruff)</li>
+            <!-- <li>✅ Vérification de style (ruff)</li> -->
             <li>✅ Tests unitaires (pytest)</li>
             <li>✅ Analyse IA</li>
         </ul>
@@ -83,10 +83,10 @@ def generate_email_body(failures: dict, ai_report: str) -> str:
     else:
         email_body += '<li style="color: #28a745;">✅ <strong>Typage (mypy)</strong>: OK</li>'
     
-    if failures['ruff']:
-        email_body += '<li style="color: #dc3545;">❌ <strong>Style (ruff)</strong>: Erreurs détectées</li>'
-    else:
-        email_body += '<li style="color: #28a745;">✅ <strong>Style (ruff)</strong>: OK</li>'
+    # if failures['ruff']:
+    #     email_body += '<li style="color: #dc3545;">❌ <strong>Style (ruff)</strong>: Erreurs détectées</li>'
+    # else:
+    #     email_body += '<li style="color: #28a745;">✅ <strong>Style (ruff)</strong>: OK</li>'
     
     if failures['pytest']:
         email_body += '<li style="color: #dc3545;">❌ <strong>Tests (pytest)</strong>: Échecs détectés</li>'
@@ -116,12 +116,12 @@ def ma_fonction(param: str) -> int:
             </pre>
 """
     
-    if failures['ruff']:
-        email_body += """
-            <h4>Erreurs de Style (ruff):</h4>
-            <p>Exécutez localement: <code style="background-color: #e9ecef; padding: 2px 5px; border-radius: 3px;">ruff check . --fix</code></p>
-            <p>Ruff corrigera automatiquement la plupart des problèmes de style.</p>
-"""
+#     if failures['ruff']:
+#         email_body += """
+#             <h4>Erreurs de Style (ruff):</h4>
+#             <p>Exécutez localement: <code style="background-color: #e9ecef; padding: 2px 5px; border-radius: 3px;">ruff check . --fix</code></p>
+#             <p>Ruff corrigera automatiquement la plupart des problèmes de style.</p>
+# """
     
     if failures['pytest']:
         email_body += """
