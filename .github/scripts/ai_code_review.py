@@ -1,5 +1,5 @@
 
-#!/usr/bin/env python3
+#!/usr/bin/env python3 vr
 """
 Script d'analyse IA du code avec profilage personnalisé.
 Utilise Groq API (gratuit).
@@ -129,7 +129,7 @@ Réponds en JSON avec cette structure exacte:
                     'max_tokens': 2000
                 }
             )
-            
+             
             if response.status_code == 200:
                 content = response.json()['choices'][0]['message']['content']
                 
