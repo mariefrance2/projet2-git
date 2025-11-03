@@ -15,7 +15,8 @@ jobs:
       pull-requests: read
       
     steps:
-    # ⚠️ ÉTAPE CRITIQUE : Checkout du code
+    
+    # 1. CORRECTION (image_a3afd5.png): AJOUT du Checkout du code pour accéder à requirements.txt
     - name: Checkout code
       uses: actions/checkout@v4
     
@@ -40,6 +41,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        # Condition pour la robustesse
         if [ -f requirements.txt ]; then
           pip install -r requirements.txt
         else
@@ -84,12 +86,28 @@ jobs:
         fi
       continue-on-error: true
     
+    # 2. & 3. CORRECTIONS: Alignement des secrets (EMAIL_LDARDAO) et Ajout du Débogage
     - name: Check results and send email
       env:
-        EMAIL_USERNAME: ${{ secrets.EMAIL_DARDAO }}
-        EMAIL_PASSWORD: ${{ secrets.PASSWORD_DARDAO }}
+        EMAIL_USERNAME: ${{ secrets.EMAIL_LDARDAO }}
+        EMAIL_PASSWORD: ${{ secrets.PASSWORD_LDARDAO }}
         TEAM_EMAIL: ${{ secrets.TEAM_EMAIL }}
       run: |
+        # DÉBOGAGE: Vérifie si les secrets sont vides
+        echo "Vérification des variables d'email..."
+        if [ -z "$EMAIL_USERNAME" ]; then
+          echo "ERREUR CRITIQUE: Le secret EMAIL_LDARDAO n'est pas rempli ou accessible."
+          echo "Veuillez vérifier et RENSEIGNER sa valeur sur GitHub."
+          exit 1 
+        fi
+        if [ -z "$EMAIL_PASSWORD" ]; then
+          echo "ERREUR CRITIQUE: Le secret PASSWORD_LDARDAO n'est pas rempli ou accessible."
+          echo "Veuillez vérifier et RENSEIGNER sa valeur sur GitHub."
+          exit 1 
+        fi
+        echo "Les secrets sont présents. Tentative d'exécution du script..."
+
+        # Exécution du script principal
         if [ -f .github/scripts/check_results.py ]; then
           python .github/scripts/check_results.py
         else
