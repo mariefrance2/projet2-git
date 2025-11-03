@@ -62,6 +62,15 @@ jobs:
             echo "✅ GROQ_API_KEY is set"
             echo "${GROQ_API_KEY:0:5}..."  # print only the first few chars
           fi
+      
+      - name: Debug API Email
+        run: |
+          if [ -z "$EMAIL_DONALD" ]; then
+            echo "❌ EMAIL_DONALD is empty"
+          else
+            echo "✅ EMAIL_DONALD is set"
+            echo "${EMAIL_DONALD:0:5}..."  # print only the first few chars
+          fi
 
       - name: AI Code Review
         env:
